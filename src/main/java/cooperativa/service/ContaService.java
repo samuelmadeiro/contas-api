@@ -17,13 +17,12 @@ public class ContaService {
     private final TransacaoRepository transacaoRepository;
     private final CorrentistaService correntistaService;
 
-    public ContaService(ContaRepository contaRepository, TransacaoRepository transacaoRepository,
-                        CorrentistaService correntistaService) {
+    public ContaService(ContaRepository contaRepository, TransacaoRepository transacaoRepository, CorrentistaService correntistaService) {
         this.contaRepository = contaRepository;
         this.transacaoRepository = transacaoRepository;
         this.correntistaService = correntistaService;
     }
-    private String gerarNumero() {
+    private String geradorDeNumero() {
         long proximo = contaRepository.count() + 1;
         String numero = String.format("%06d", proximo);
         while (contaRepository.existsByNumero(numero)) {
@@ -36,7 +35,7 @@ public class ContaService {
     @Transactional
     public Conta abrir(Long IdCorrentista, TipoDeConta tipoDeConta, BigDecimal limite){
         Correntista correntista = correntistaService.buscarPeloID(IdCorrentista);
-        String numero = gerarNumero();
+        String numero = geradorDeNumero();
         Conta conta;
 
         if(tipoDeConta== TipoDeConta.CORRENTE){
