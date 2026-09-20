@@ -1,6 +1,8 @@
 package cooperativa.controller;
 
+import cooperativa.model.Conta;
 import cooperativa.model.Correntista;
+import cooperativa.service.ContaService;
 import cooperativa.service.CorrentistaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +17,11 @@ import java.util.List;
 @RequestMapping("/correntistas")
 public class CorrentistaController {
     private final CorrentistaService correntistaService;
+    private final ContaService contaService;
 
-    public CorrentistaController(CorrentistaService correntistaService) {
+    public CorrentistaController(CorrentistaService correntistaService, ContaService contaService) {
         this.correntistaService = correntistaService;
+        this.contaService = contaService;
     }
 
     @PostMapping
@@ -44,4 +48,12 @@ public class CorrentistaController {
         return new CorrentistaResponse((correntistaService.buscarPeloID(id)));
     }
 
+    @GetMapping("/{id}/contas")
+    public List<ContaResponse> listarContas(@PathVariable Long id) {
+        List<ContaResponse> resposta = new ArrayList<ContaResponse>();
+        for (Conta conta : contaService.listarpeloCorrentista(id)) {
+            resposta.add(new ContaResponse(conta));
+        }
+        return resposta;
+    }
 }
