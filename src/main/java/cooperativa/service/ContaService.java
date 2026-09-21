@@ -53,7 +53,7 @@ public class ContaService {
     }
 
     @Transactional(readOnly = true)
-    public Conta buscarPeloID(long id){
+    public Conta buscarPeloID(Long id){
         return contaRepository.findById(id).orElseThrow(()-> new IdNaoEncontradoException("Id "+ id +" da conta não encontrado"));
     }
 

@@ -4,7 +4,6 @@ import cooperativa.model.Correntista;
 import cooperativa.model.IdNaoEncontradoException;
 import cooperativa.model.RegraDeNegocioException;
 import cooperativa.repository.CorrentistaRepository;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
