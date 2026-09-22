@@ -13,8 +13,6 @@ API REST que gerencia correntistas e contas, sendo elas conta corrente e conta p
 
 ## Como rodar
 
-Não é necessário baixar nem o Maven nem o banco de dados, apenas clone o repositório. O banco de dados é gerado ao executar pela primeira vez.
-
 ### No Windows
 
 ```bash
@@ -28,6 +26,11 @@ mvnw.cmd spring-boot:run
 ```
 
 A aplicação vai subir no `localhost:8080`.
+
+## Banco de dados
+As tabelas são criadas automaticamente durante a primeira execução, feitas pelo Spring Data JPA, o `application.properties` usa `ddl-auto=update`, não precisando rodar nada antes.
+
+O arquivo [`schema.sql`](schema.sql), ele documenta o modelo, `correntista`, `conta` e `transação`. A conta corrente e a conta poupança ficam na mesma tabela, o que difere entre as duas é o tipo de conta e a existência do limite na conta corrente. E serve como ponto de partida para  trocar o Banco de H2 para MySQL.
 
 ## Swagger e o console do banco
 
@@ -171,8 +174,19 @@ mvnw.cmd test
 - **ContaPoupancaTest:** saque até o saldo chegar a 0, saque acima do saldo não alterando o saldo, cálculo do rendimento e não deixa fazer se o saldo for 0.
 - **ContaServiceTest:** com o Mockito, verifica se o saldo altera com o depósito e registra a transação, e se a conta for inexistente pelo id ele retorna exceção 404.
 
-## O que eu faria se tivesse mais tempo
+## O que foi feito
+Todos os itens obrigatórios: cada correntista podendo ter várias contas, conta corrente tendo limite e o saque até o valor saldo+limite,
+Conta Poupança não permite saque além do saldo, Depósito deve aumentar o saldo e registrar a transação, saque deve reduzir o saldo e registrar a transação e os endpoints REST.
 
+E todos os itens diferenciais foram completos: Conta poupança com um endpoint para aplicar rendimento mensal, informando a taxa, registrando a transação e atualizando o saldo. Conta corrente com um endpoint aplicando juros no saldo negativo, registrando a transação e atualizando o saldo. Testes unitários cobrindo as regras de saque, depósito e cálculo de rendimento/juros. A Documentação da API com Swagger / OpenAPI e Tratamento de erros padronizado (mensagens claras e status HTTP adequados).
+
+## O que ficou de fora
+- Edição e remoção de correntistas e contas, o enunciado só pediu cadastro e consulta.
+- Autenticação, não faz parte do escopo do projeto.
+- MySQL, o projeto roda só com H2.
+
+
+## O que eu faria se tivesse mais tempo
 1. Transferência entre contas, a operação mais utilizada no dia a dia operacional.
 2. Uma paginação dos GET, extrato e listagem, além de filtros por período. Atualmente devolvem tudo de uma vez.
 3. Trocar o H2 para MySQL, em um profile separado.
