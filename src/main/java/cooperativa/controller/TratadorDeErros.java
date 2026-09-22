@@ -4,8 +4,10 @@ import cooperativa.model.IdNaoEncontradoException;
 import cooperativa.model.RegraDeNegocioException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -34,6 +36,17 @@ public class TratadorDeErros {
             escrita.add(errada.getField() + ": " + errada.getDefaultMessage());
         }
         ErroResponse erro = new ErroResponse("Os dados da requisição foram inválidos",HttpStatus.BAD_REQUEST.value(), escrita);
+        return ResponseEntity.badRequest().body(erro);
+    }
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErroResponse> corpoInvalido(HttpMessageNotReadableException exception){
+        ErroResponse erro = new ErroResponse("O corpo da requisição está com um formato ruim ou tem um valor inválido.", HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.badRequest().body(erro);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErroResponse> parametroFaltando(MissingServletRequestParameterException exception){
+        ErroResponse erro = new ErroResponse("O parâmetro '" + exception.getParameterName() + "' é obrigatório.", HttpStatus.BAD_REQUEST.value());
         return ResponseEntity.badRequest().body(erro);
     }
 
