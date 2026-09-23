@@ -11,6 +11,10 @@ API REST que gerencia correntistas e contas, sendo elas conta corrente e conta p
 - Documentação da API: Swagger
 - Testes: JUnit 5 e Mockito
 
+## Demonstração
+
+Vídeo mostrando a API funcionando: https://www.youtube.com/watch?v=Sqx2NxuzqnM
+
 ## Como rodar
 
 ### No Windows
